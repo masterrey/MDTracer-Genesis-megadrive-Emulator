@@ -21,6 +21,9 @@ namespace MDTracer.Unity
         private const int CRAM_COLOR_COUNT = 64;     // 64 colors in CRAM
         private const int VSRAM_SIZE_WORDS = 20;     // 40 bytes VSRAM
         
+        // Test pattern rendering
+        private const byte TEST_PATTERN_BLUE = 128; // Mid-blue for visual verification
+        
         private int screenWidth;
         private int screenHeight;
         private Color32[] frameBuffer;
@@ -99,8 +102,6 @@ namespace MDTracer.Unity
             // TODO: Integrate full VDP rendering from md_vdp_renderer.cs
             
             // Test pattern to verify rendering pipeline works
-            const byte TEST_PATTERN_BLUE = 128; // Mid-blue for visual verification
-            
             for (int y = 0; y < screenHeight; y++)
             {
                 for (int x = 0; x < screenWidth; x++)

@@ -55,6 +55,10 @@ namespace MDTracer.Unity
         private const int SCREEN_WIDTH = 320;
         private const int SCREEN_HEIGHT = 224;
         
+        // ROM size validation (Genesis ROMs are typically 512KB to 4MB)
+        private const long MAX_ROM_SIZE = 8 * 1024 * 1024; // 8MB max
+        private const long MIN_ROM_SIZE = 512; // 512 bytes min (header size)
+        
         void Start()
         {
             InitializeEmulator();
@@ -114,10 +118,8 @@ namespace MDTracer.Unity
                     return false;
                 }
                 
-                // Validate file size (Genesis ROMs are typically 512KB to 4MB)
+                // Validate file size
                 FileInfo fileInfo = new FileInfo(fullPath);
-                const long MAX_ROM_SIZE = 8 * 1024 * 1024; // 8MB max
-                const long MIN_ROM_SIZE = 512; // 512 bytes min (header size)
                 
                 if (fileInfo.Length > MAX_ROM_SIZE)
                 {

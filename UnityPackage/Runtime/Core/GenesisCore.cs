@@ -27,13 +27,13 @@ namespace MDTracer.Unity
         private const int SCREEN_HEIGHT = 224;
         
         // Timing
-        private const int CPU_CLOCK_HZ = 7670453;  // MC68000 clock speed
+        private const int CPU_CLOCK_HZ = 7670453;  // MC68000 clock speed (7.67 MHz)
+        private const int Z80_CLOCK_HZ = 3579545;  // Z80 clock speed (3.58 MHz)
         private const int FRAME_RATE = 60;
         private const int CYCLES_PER_FRAME = CPU_CLOCK_HZ / FRAME_RATE;
         
-        // Z80 clock ratio: Z80 runs at 3.58 MHz vs M68K at 7.67 MHz
-        // Ratio = 3.58 / 7.67 ≈ 0.467
-        private const float Z80_CLOCK_RATIO = 0.467f;
+        // Z80 clock ratio relative to M68K
+        private const float Z80_CLOCK_RATIO = (float)Z80_CLOCK_HZ / (float)CPU_CLOCK_HZ;
         
         private bool isInitialized = false;
         private bool romLoaded = false;
