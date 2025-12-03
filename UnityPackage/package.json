@@ -1,0 +1,20 @@
+{
+  "name": "com.mdtracer.genesis-emulator",
+  "version": "1.0.0",
+  "displayName": "MDTracer Genesis Emulator",
+  "description": "SEGA MegaDrive (Genesis) emulator for Unity. Allows you to run MegaDrive/Genesis ROM files in your Unity projects.",
+  "unity": "2020.3",
+  "keywords": [
+    "emulator",
+    "genesis",
+    "megadrive",
+    "sega",
+    "retro"
+  ],
+  "author": {
+    "name": "MDTracer",
+    "url": "https://github.com/masterrey/MDTracer-Genesis-megadrive-Emulator"
+  },
+  "license": "MIT",
+  "dependencies": {}
+}

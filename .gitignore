@@ -1,0 +1,40 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+bin/
+obj/
+*.cache
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+*.pidb
+*.booproj
+sysinfo.txt
+*.apk
+*.unitypackage
+*.app
+
+# Unity meta files (we include them in source)
+# *.meta
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ROM files (never commit ROMs)
+*.bin
+*.smd
+*.gen
+# Note: *.md is markdown, not MegaDrive ROM format
