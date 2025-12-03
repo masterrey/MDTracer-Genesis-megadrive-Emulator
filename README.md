@@ -9,6 +9,18 @@ The software also displays MC68000 programs in disassembled form, allowing you t
 Enjoy the amazing technology and wisdom of the engineers of the time from both the hardware and software perspectives.
  
 Note: This program is not intended for playing games illegally. Its purpose is to help users understand and appreciate the ingenuity of the engineers who created this remarkable technology.
+
+## Unity Package
+
+This repository now includes a **Unity Package** that allows you to integrate the Genesis/MegaDrive emulator into your Unity projects! 
+
+- 📦 Easy installation via Unity Package Manager
+- 🎮 Simple MonoBehaviour component for integration
+- 🎯 Drag-and-drop ROM loading
+- ⌨️ Built-in keyboard input mapping
+- 🖼️ Automatic rendering to Unity textures
+
+See the [UnityPackage README](UnityPackage/README.md) for installation and usage instructions.
  
 ![demo1](https://www.jppass.jp/mdtracer/wp-content/uploads/2025/01/demo1.png)
 

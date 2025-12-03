@@ -1,0 +1,18 @@
+{
+    "name": "MDTracer.Editor",
+    "rootNamespace": "MDTracer.Unity.Editor",
+    "references": [
+        "MDTracer.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
