@@ -10,6 +10,17 @@ namespace MDTracer.Unity
     /// </summary>
     public class VDPChip : IDisposable
     {
+        // VDP timing constants (NTSC)
+        private const int CYCLES_PER_SCANLINE = 488;
+        private const int NTSC_SCANLINES_PER_FRAME = 262;
+        private const int VBLANK_START_SCANLINE = 224;
+        
+        // VDP memory sizes
+        private const int VDP_REGISTER_COUNT = 24;
+        private const int VRAM_SIZE_WORDS = 32768;  // 64KB VRAM
+        private const int CRAM_COLOR_COUNT = 64;     // 64 colors in CRAM
+        private const int VSRAM_SIZE_WORDS = 20;     // 40 bytes VSRAM
+        
         private int screenWidth;
         private int screenHeight;
         private Color32[] frameBuffer;
@@ -27,10 +38,10 @@ namespace MDTracer.Unity
         
         public VDPChip()
         {
-            registers = new byte[24];
-            vram = new ushort[32768]; // 64KB VRAM
-            cram = new ushort[64];     // 128 bytes CRAM (64 colors)
-            vsram = new ushort[20];    // 40 bytes VSRAM
+            registers = new byte[VDP_REGISTER_COUNT];
+            vram = new ushort[VRAM_SIZE_WORDS];
+            cram = new ushort[CRAM_COLOR_COUNT];
+            vsram = new ushort[VSRAM_SIZE_WORDS];
         }
         
         public void Initialize(int width, int height)
@@ -63,20 +74,17 @@ namespace MDTracer.Unity
             cycleCounter += cycles;
             
             // Simple scanline-based rendering
-            // Genesis runs at approximately 488 CPU cycles per scanline
-            const int CYCLES_PER_SCANLINE = 488;
-            
             while (cycleCounter >= CYCLES_PER_SCANLINE)
             {
                 cycleCounter -= CYCLES_PER_SCANLINE;
                 scanline++;
                 
-                if (scanline >= 262) // NTSC: 262 scanlines per frame
+                if (scanline >= NTSC_SCANLINES_PER_FRAME)
                 {
                     scanline = 0;
                     vblankFlag = false;
                 }
-                else if (scanline == 224) // VBlank starts after visible area
+                else if (scanline == VBLANK_START_SCANLINE)
                 {
                     vblankFlag = true;
                     // Render the frame

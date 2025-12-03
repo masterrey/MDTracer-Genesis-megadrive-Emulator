@@ -8,13 +8,15 @@ namespace MDTracer.Unity
     /// </summary>
     public class YM2612SoundChip : IDisposable
     {
+        private const int REGISTER_BANK_SIZE = 512; // YM2612 has multiple register banks
+        private const int SAMPLE_RATE = 44100;
+        
         private byte[] registers;
         private int cycleCounter;
-        private const int SAMPLE_RATE = 44100;
         
         public YM2612SoundChip()
         {
-            registers = new byte[512]; // YM2612 has multiple register banks
+            registers = new byte[REGISTER_BANK_SIZE];
         }
         
         public void Reset()

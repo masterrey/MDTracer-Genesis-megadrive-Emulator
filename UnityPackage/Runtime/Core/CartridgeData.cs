@@ -82,12 +82,14 @@ namespace MDTracer.Unity
                 RomStart = ReadLong(HEADER_ROM_START_OFFSET);
                 RomEnd = ReadLong(HEADER_ROM_END_OFFSET);
                 
+#if UNITY_EDITOR || DEBUG
                 Debug.Log($"Cartridge loaded: {GameTitle}");
                 Debug.Log($"  System: {SystemType}");
                 Debug.Log($"  Copyright: {Copyright}");
                 Debug.Log($"  Serial: {SerialNumber}");
                 Debug.Log($"  Region: {Region}");
                 Debug.Log($"  ROM: 0x{RomStart:X8} - 0x{RomEnd:X8}");
+#endif
             }
             catch (Exception ex)
             {

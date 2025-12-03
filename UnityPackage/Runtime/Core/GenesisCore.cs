@@ -73,7 +73,9 @@ namespace MDTracer.Unity
             
             isInitialized = true;
             
+#if UNITY_EDITOR || DEBUG
             Debug.Log("Genesis core initialized");
+#endif
         }
         
         /// <summary>
@@ -107,9 +109,11 @@ namespace MDTracer.Unity
                 
                 romLoaded = true;
                 
+#if UNITY_EDITOR || DEBUG
                 Debug.Log($"ROM loaded: {cartridge.GameTitle}");
                 Debug.Log($"System: {cartridge.SystemType}");
                 Debug.Log($"Region: {cartridge.Region}");
+#endif
                 
                 return true;
             }

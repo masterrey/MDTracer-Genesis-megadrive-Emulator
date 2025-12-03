@@ -8,6 +8,27 @@ namespace MDTracer.Unity
     /// </summary>
     public class MemoryBus
     {
+        // Genesis memory map constants
+        private const uint ROM_END_ADDRESS = 0x400000;
+        private const uint Z80_ADDRESS_SPACE_START = 0xA00000;
+        private const uint Z80_ADDRESS_SPACE_END = 0xA10000;
+        private const uint Z80_RAM_SIZE_MASK = 0x1FFF;
+        private const uint Z80_BUS_REQUEST = 0xA11100;
+        private const uint Z80_RESET = 0xA11200;
+        private const uint IO_ADDRESS_START = 0xA10000;
+        private const uint IO_ADDRESS_END = 0xA11000;
+        private const uint VDP_ADDRESS_START = 0xC00000;
+        private const uint VDP_ADDRESS_END = 0xC00020;
+        private const uint WORK_RAM_START = 0xFF0000;
+        
+        // Controller ports
+        private const uint CONTROLLER_1_DATA = 0xA10003;
+        private const uint CONTROLLER_2_DATA = 0xA10005;
+        
+        // System RAM sizes
+        private const int WORK_RAM_SIZE = 65536;  // 64KB
+        private const int Z80_RAM_SIZE = 8192;    // 8KB
+        
         private CartridgeData cartridge;
         private VDPChip vdp;
         private Z80Processor z80;
@@ -26,8 +47,8 @@ namespace MDTracer.Unity
         
         public MemoryBus()
         {
-            workRam = new byte[65536];   // 64KB
-            z80Ram = new byte[8192];     // 8KB
+            workRam = new byte[WORK_RAM_SIZE];
+            z80Ram = new byte[Z80_RAM_SIZE];
             controller1Data = 0xFF;
             controller2Data = 0xFF;
         }
@@ -74,40 +95,36 @@ namespace MDTracer.Unity
         public byte ReadByte(uint address)
         {
             // ROM: 0x000000 - 0x3FFFFF (4MB)
-            if (address < 0x400000)
+            if (address < ROM_END_ADDRESS)
             {
                 return cartridge != null ? cartridge.ReadByte(address) : (byte)0xFF;
             }
             // Z80 address space: 0xA00000 - 0xA0FFFF
-            else if (address >= 0xA00000 && address < 0xA10000)
+            else if (address >= Z80_ADDRESS_SPACE_START && address < Z80_ADDRESS_SPACE_END)
             {
-                if (address < 0xA02000)
-                {
-                    return z80Ram[address & 0x1FFF];
-                }
-                return 0xFF;
+                return z80Ram[address & Z80_RAM_SIZE_MASK];
             }
             // Z80 control: 0xA11100, 0xA11200
-            else if (address == 0xA11100)
+            else if (address == Z80_BUS_REQUEST)
             {
                 return z80BusRequest ? (byte)0x00 : (byte)0x01;
             }
-            else if (address == 0xA11200)
+            else if (address == Z80_RESET)
             {
                 return z80Reset ? (byte)0x00 : (byte)0x01;
             }
             // I/O: 0xA10000 - 0xA10FFF
-            else if (address >= 0xA10000 && address < 0xA11000)
+            else if (address >= IO_ADDRESS_START && address < IO_ADDRESS_END)
             {
                 return ReadIO(address);
             }
             // VDP: 0xC00000 - 0xC0001F
-            else if (address >= 0xC00000 && address < 0xC00020)
+            else if (address >= VDP_ADDRESS_START && address < VDP_ADDRESS_END)
             {
                 return ReadVDP(address);
             }
             // Work RAM: 0xFF0000 - 0xFFFFFF
-            else if (address >= 0xFF0000)
+            else if (address >= WORK_RAM_START)
             {
                 return workRam[address & 0xFFFF];
             }
@@ -133,20 +150,17 @@ namespace MDTracer.Unity
         public void WriteByte(uint address, byte value)
         {
             // ROM area is read-only
-            if (address < 0x400000)
+            if (address < ROM_END_ADDRESS)
             {
                 return;
             }
             // Z80 address space
-            else if (address >= 0xA00000 && address < 0xA10000)
+            else if (address >= Z80_ADDRESS_SPACE_START && address < Z80_ADDRESS_SPACE_END)
             {
-                if (address < 0xA02000)
-                {
-                    z80Ram[address & 0x1FFF] = value;
-                }
+                z80Ram[address & Z80_RAM_SIZE_MASK] = value;
             }
             // Z80 control
-            else if (address == 0xA11100)
+            else if (address == Z80_BUS_REQUEST)
             {
                 z80BusRequest = (value & 0x01) != 0;
                 if (z80 != null)
@@ -154,7 +168,7 @@ namespace MDTracer.Unity
                     z80.SetActive(!z80BusRequest);
                 }
             }
-            else if (address == 0xA11200)
+            else if (address == Z80_RESET)
             {
                 z80Reset = (value & 0x01) == 0;
                 if (z80 != null)
@@ -163,17 +177,17 @@ namespace MDTracer.Unity
                 }
             }
             // I/O
-            else if (address >= 0xA10000 && address < 0xA11000)
+            else if (address >= IO_ADDRESS_START && address < IO_ADDRESS_END)
             {
                 WriteIO(address, value);
             }
             // VDP
-            else if (address >= 0xC00000 && address < 0xC00020)
+            else if (address >= VDP_ADDRESS_START && address < VDP_ADDRESS_END)
             {
                 WriteVDP(address, value);
             }
             // Work RAM
-            else if (address >= 0xFF0000)
+            else if (address >= WORK_RAM_START)
             {
                 workRam[address & 0xFFFF] = value;
             }
@@ -194,11 +208,11 @@ namespace MDTracer.Unity
         private byte ReadIO(uint address)
         {
             // Controller ports
-            if (address == 0xA10003) // Controller 1 data
+            if (address == CONTROLLER_1_DATA)
             {
                 return controller1Data;
             }
-            else if (address == 0xA10005) // Controller 2 data
+            else if (address == CONTROLLER_2_DATA)
             {
                 return controller2Data;
             }
