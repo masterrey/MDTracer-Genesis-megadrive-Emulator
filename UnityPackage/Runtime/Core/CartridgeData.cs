@@ -13,6 +13,15 @@ namespace MDTracer.Unity
         private byte[] romData;
         private int romSize;
         
+        // Genesis ROM header offsets (see Genesis Technical Overview)
+        private const int HEADER_SYSTEM_TYPE_OFFSET = 0x100;
+        private const int HEADER_COPYRIGHT_OFFSET = 0x110;
+        private const int HEADER_GAME_TITLE_OFFSET = 0x120;
+        private const int HEADER_SERIAL_NUMBER_OFFSET = 0x180;
+        private const int HEADER_REGION_OFFSET = 0x1F0;
+        private const int HEADER_ROM_START_OFFSET = 0x1A0;
+        private const int HEADER_ROM_END_OFFSET = 0x1A4;
+        
         // Cartridge header information
         public string SystemType { get; private set; }
         public string Copyright { get; private set; }
@@ -52,26 +61,26 @@ namespace MDTracer.Unity
         {
             try
             {
-                // Genesis/MegaDrive ROM header starts at 0x100
+                // Genesis/MegaDrive ROM header format
                 
-                // System type (0x100-0x10F)
-                SystemType = ReadString(0x100, 16).Trim();
+                // System type
+                SystemType = ReadString(HEADER_SYSTEM_TYPE_OFFSET, 16).Trim();
                 
-                // Copyright (0x110-0x11F)
-                Copyright = ReadString(0x110, 16).Trim();
+                // Copyright
+                Copyright = ReadString(HEADER_COPYRIGHT_OFFSET, 16).Trim();
                 
-                // Domestic name (0x120-0x14F)
-                GameTitle = ReadString(0x120, 48).Trim();
+                // Domestic name (game title)
+                GameTitle = ReadString(HEADER_GAME_TITLE_OFFSET, 48).Trim();
                 
-                // Serial number (0x180-0x18D)
-                SerialNumber = ReadString(0x180, 14).Trim();
+                // Serial number
+                SerialNumber = ReadString(HEADER_SERIAL_NUMBER_OFFSET, 14).Trim();
                 
-                // Region (0x1F0-0x1FF)
-                Region = ReadString(0x1F0, 16).Trim();
+                // Region codes
+                Region = ReadString(HEADER_REGION_OFFSET, 16).Trim();
                 
                 // ROM start/end addresses
-                RomStart = ReadLong(0x1A0);
-                RomEnd = ReadLong(0x1A4);
+                RomStart = ReadLong(HEADER_ROM_START_OFFSET);
+                RomEnd = ReadLong(HEADER_ROM_END_OFFSET);
                 
                 Debug.Log($"Cartridge loaded: {GameTitle}");
                 Debug.Log($"  System: {SystemType}");

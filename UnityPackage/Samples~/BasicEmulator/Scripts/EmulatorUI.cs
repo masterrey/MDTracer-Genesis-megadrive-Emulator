@@ -164,7 +164,9 @@ namespace MDTracer.Unity.Samples
                 statusText.text = message;
             }
             
+#if UNITY_EDITOR
             Debug.Log($"Emulator: {message}");
+#endif
         }
     }
 }

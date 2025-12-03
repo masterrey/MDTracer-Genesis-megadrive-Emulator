@@ -31,6 +31,10 @@ namespace MDTracer.Unity
         private const int FRAME_RATE = 60;
         private const int CYCLES_PER_FRAME = CPU_CLOCK_HZ / FRAME_RATE;
         
+        // Z80 clock ratio: Z80 runs at 3.58 MHz vs M68K at 7.67 MHz
+        // Ratio = 3.58 / 7.67 ≈ 0.467
+        private const float Z80_CLOCK_RATIO = 0.467f;
+        
         private bool isInitialized = false;
         private bool romLoaded = false;
         
@@ -153,7 +157,7 @@ namespace MDTracer.Unity
                 cyclesRemaining -= cycles;
                 
                 // Run Z80 (runs at different clock speed)
-                int z80Cycles = (int)(cycles * 0.467f); // Z80 clock ratio
+                int z80Cycles = (int)(cycles * Z80_CLOCK_RATIO);
                 z80.ExecuteCycles(z80Cycles);
                 
                 // Update VDP

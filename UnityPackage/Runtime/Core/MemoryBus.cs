@@ -209,7 +209,8 @@ namespace MDTracer.Unity
         private void WriteIO(uint address, byte value)
         {
             // I/O control registers
-            // TODO: Implement full I/O port control
+            // TODO: Implement controller port control registers (TH, TL, TR pins)
+            // See Genesis Technical Overview Section 4.2 for I/O port specifications
         }
         
         private byte ReadVDP(uint address)

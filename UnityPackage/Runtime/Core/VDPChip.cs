@@ -90,17 +90,19 @@ namespace MDTracer.Unity
             // This is a simplified stub rendering
             // TODO: Integrate full VDP rendering from md_vdp_renderer.cs
             
-            // For now, just create a test pattern to verify it works
+            // Test pattern to verify rendering pipeline works
+            const byte TEST_PATTERN_BLUE = 128; // Mid-blue for visual verification
+            
             for (int y = 0; y < screenHeight; y++)
             {
                 for (int x = 0; x < screenWidth; x++)
                 {
                     int index = y * screenWidth + x;
                     
-                    // Simple test pattern
+                    // Simple gradient test pattern
                     byte r = (byte)((x * 255) / screenWidth);
                     byte g = (byte)((y * 255) / screenHeight);
-                    byte b = 128;
+                    byte b = TEST_PATTERN_BLUE;
                     
                     frameBuffer[index] = new Color32(r, g, b, 255);
                 }

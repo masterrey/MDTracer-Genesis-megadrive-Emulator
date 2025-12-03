@@ -21,6 +21,10 @@ namespace MDTracer.Unity.Editor
         private SerializedProperty audioVolumeProp;
         private SerializedProperty showDebugInfoProp;
         
+        // Cache for path validation to avoid repeated file system checks
+        private string cachedRomPath = "";
+        private bool cachedPathExists = false;
+        
         private void OnEnable()
         {
             romPathProp = serializedObject.FindProperty("romPath");
@@ -52,13 +56,20 @@ namespace MDTracer.Unity.Editor
             
             if (!string.IsNullOrEmpty(romPathProp.stringValue))
             {
-                string fullPath = System.IO.Path.IsPathRooted(romPathProp.stringValue) 
-                    ? romPathProp.stringValue 
-                    : System.IO.Path.Combine(Application.streamingAssetsPath, romPathProp.stringValue);
-                
-                if (System.IO.File.Exists(fullPath))
+                // Only recompute path if it changed (performance optimization)
+                if (cachedRomPath != romPathProp.stringValue)
                 {
-                    EditorGUILayout.HelpBox($"ROM file found: {System.IO.Path.GetFileName(fullPath)}", MessageType.Info);
+                    cachedRomPath = romPathProp.stringValue;
+                    string fullPath = System.IO.Path.IsPathRooted(cachedRomPath) 
+                        ? cachedRomPath 
+                        : System.IO.Path.Combine(Application.streamingAssetsPath, cachedRomPath);
+                    cachedPathExists = System.IO.File.Exists(fullPath);
+                }
+                
+                if (cachedPathExists)
+                {
+                    string fileName = System.IO.Path.GetFileName(cachedRomPath);
+                    EditorGUILayout.HelpBox($"ROM file found: {fileName}", MessageType.Info);
                 }
                 else
                 {
